@@ -13,7 +13,8 @@ const urlSchema = new mongoose.Schema({
     dateCreated: {
         type: Date,
         default: Date.now
-    }
+    },
+
 })
 
 export default mongoose.model("Url", urlSchema);
