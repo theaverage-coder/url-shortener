@@ -4,13 +4,37 @@ import Click from "../models/Click";
 import express from "express";
 const router = express.Router();
 
-// @desc Creates a short code for URL
+// @desc Creates a short code for URL or a custom unique URL if given
 // @router /shortenUrl
 const shorten = async (req, res) => {
     try {
-        const { originalUrl } = req.body;
+        const { originalUrl, customUrl } = req.body;
+        let code;
 
-        const code = nanoid(6);
+        // Validate URL
+        try {
+            new URL(originalUrl);
+        } catch {
+            return res.status(400).json({ error: "Invalid URL" });
+        }
+
+        if (customUrl) {
+            if (!isValidCode.test(customUrl)) {
+                return res.status(400).json({
+                    error: "Custom URL must be 3-20 characters with alphanumerics, _ and -"
+                });
+            }
+            // Check if it's already been taken
+            const existingUrl = await Url.findOne({ code: customCode });
+
+            if (existingUrl) {
+                return res.status(400).json({ error: "Custom URL already in use" });
+            }
+
+            code = customUrl;
+        } else {
+            code = new nanoid(6); // Generate random code
+        }
 
         const newUrl = new Url({ originalUrl, code });
         await newUrl.save();
@@ -24,6 +48,9 @@ const shorten = async (req, res) => {
         return res.status(500).json({ err: "Server error" });
     }
 }
+
+// Regex expression that checks if a string is 3-20 characters and contains only alphanumerics, _ and - 
+const isValidCode = /^[a-zA-Z0-9_-]{3,20}$/;
 
 // @desc Redirect to URL given a code
 // @router /get/:code
