@@ -2,7 +2,6 @@ import { nanoid } from "nanoid";
 import Url from "../models/Url";
 import Click from "../models/Click";
 import express from "express";
-const router = express.Router();
 
 // @desc Creates a short code for URL or a custom unique URL if given
 // @router /shortenUrl
@@ -45,7 +44,7 @@ const shorten = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ err: "Server error" });
+        return res.status(500).json({ error: "Server error" });
     }
 }
 
