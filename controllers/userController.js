@@ -36,7 +36,26 @@ const register = async (req, res) => {
 // @ desc Logs in an existing user
 // @router /login
 const login = async (req, res) => {
+    try {
+        const { username, password } = req.body;
 
+
+        const user = await User.findOne({ username });
+
+        if (user && (await bcrypt.compare(password, user.password))) {
+            const token = generateToken(user._id);
+            return res.status(200).json({ token });
+        }
+
+        return res.status(400).json({ error: "Invalid credentials " });
+    } catch (err) {
+        return res.status(500).json({ error: "Server error" });
+    }
+}
+
+// Generate JWT token
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 }
 
 export {
