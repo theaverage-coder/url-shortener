@@ -118,8 +118,21 @@ const analytics = async (req, res) => {
     }
 }
 
+// @desc Get all URL codes created by a user
+// @router /my-urls
+const my_urls = async (req, res) => {
+    try {
+        const urls = await Url.find({ user: req.user });
+
+        return res.status(200).json(urls);
+    } catch (err) {
+        return res.status(500).json({ err: "Server error" });
+    }
+}
+
 export {
     shorten,
     displayCode,
     analytics,
+    my_urls
 }
