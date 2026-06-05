@@ -35,7 +35,7 @@ const shorten = async (req, res) => {
             code = new nanoid(6); // Generate random code
         }
 
-        const newUrl = new Url({ originalUrl, code });
+        const newUrl = new Url({ originalUrl, code, user: req.user });
         await newUrl.save();
 
         return res.status(200).json({
