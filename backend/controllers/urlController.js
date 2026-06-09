@@ -124,6 +124,7 @@ const analytics = async (req, res) => {
         ])
 
         return res.status(200).json({
+            dateCreated: url.dateCreated,
             originalUrl: url.originalUrl,
             totalClicks: url.clicks,
             analytics: clicks,
@@ -146,6 +147,7 @@ const my_urls = async (req, res) => {
         return res.status(500).json({ err: "Server error" });
     }
 }
+
 
 export {
     shorten,

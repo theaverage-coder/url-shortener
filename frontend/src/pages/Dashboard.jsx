@@ -1,5 +1,6 @@
 import { useState } from "react"
-
+import { Link } from "react-router-dom";
+import UrlCard from "../components/UrlCard";
 
 export default function Dashboard() {
     const [myUrls, setMyUrls] = useState([]);
@@ -30,7 +31,21 @@ export default function Dashboard() {
 
     return (
         <div>
-
+            <Link to="/shorten">
+                Create new custom URL
+            </Link>
+            <div> My URLs</div>
+            {urls.length === 0 ? (
+                <div>
+                    No URLs found
+                </div>
+            ) : (
+                urls.map((u) => (
+                    <UrlCard
+                        key={u._id}
+                        url={u}
+                    />
+                )))}
         </div>
     )
 }
