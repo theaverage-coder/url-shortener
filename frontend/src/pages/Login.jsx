@@ -12,7 +12,6 @@ export default function Login() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
                 },
                 body: {
                     username,
@@ -21,6 +20,8 @@ export default function Login() {
             });
 
             if (response.ok) {
+
+                // Set JWT token
                 // Navigate to dashboard
             }
         } catch (err) {
@@ -47,6 +48,10 @@ export default function Login() {
 
             <button onClick={handleLogin} >
                 Login
+            </button>
+
+            <button onClick={/* navigate to register screen*/} >
+                Register
             </button>
         </div>
     )

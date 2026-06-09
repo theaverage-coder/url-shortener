@@ -105,12 +105,29 @@ const analytics = async (req, res) => {
             {
                 $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 }
             }
+        ]);
+
+        const uniqueVisitors = await Click.aggregate([
+            {
+                $match: {
+                    urlId: url._id,
+                }
+            },
+            {
+                $group: {
+                    _id: "$user"
+                }
+            },
+            {
+                $count: "count"
+            }
         ])
 
         return res.status(200).json({
             originalUrl: url.originalUrl,
             totalClicks: url.clicks,
-            analytics: clicks
+            analytics: clicks,
+            uniqueVisitors
         })
     } catch (err) {
         console.error(err);
