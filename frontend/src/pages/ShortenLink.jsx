@@ -4,6 +4,7 @@ export default function ShortenLink() {
     const [originalUrl, setOriginalUrl] = useState("");
     const [customUrl, setCustomUrl] = useState("");
     const [error, setError] = useState("");
+    const token = localStorage.getItem("token");
 
     const shorten = async () => {
         try {

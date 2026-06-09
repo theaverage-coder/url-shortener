@@ -1,7 +1,8 @@
 import { useState } from "react";
-
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
+    const navigate = useNavigate();
     const [error, setError] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -20,9 +21,11 @@ export default function Login() {
             });
 
             if (response.ok) {
-
-                // Set JWT token
-                // Navigate to dashboard
+                // set JWT token
+                const data = await response.json();
+                localStorage.setItem(data.token);
+                // navigate to dashboard
+                navigate("/dashboard");
             }
         } catch (err) {
             console.log(err);
@@ -50,9 +53,9 @@ export default function Login() {
                 Login
             </button>
 
-            <button onClick={/* navigate to register screen*/} >
+            <Link to="/register">
                 Register
-            </button>
+            </Link>
         </div>
     )
 }
