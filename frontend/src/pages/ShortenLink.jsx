@@ -8,22 +8,24 @@ export default function ShortenLink() {
 
     const shorten = async () => {
         try {
-            const response = await fetch("https://localhost:5000/shortenUrl", {
+            const response = await fetch("http://localhost:5000/url/shortenUrl", {
                 method: "POST",
-                header: {
+                headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: {
+                body: JSON.stringify({
                     originalUrl,
                     customUrl,
-                }
+                })
             });
 
             if (response.ok) {
-                // Do something
+                console.log("Custom code created!");
+            } else {
+                const errorJson = await response.json();
+                console.log(errorJson.error);
             }
-
         } catch (err) {
             console.log(err);
             setError("Failed to create custom link");
@@ -35,14 +37,14 @@ export default function ShortenLink() {
             <input
                 type="text"
                 value={originalUrl}
-                onChange={(text) => setOriginalUrl(text)}
+                onChange={(e) => setOriginalUrl(e.target.value)}
                 placeholder="Enter original URL"
             />
 
             <input
                 type="text"
                 value={customUrl}
-                onChange={(text) => setCustomUrl(text)}
+                onChange={(e) => setCustomUrl(e.target.value)}
                 placeholder="Enter custom customUrl for URL"
             />
 

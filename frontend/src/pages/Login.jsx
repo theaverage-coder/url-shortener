@@ -9,21 +9,21 @@ export default function Login() {
 
     const handleLogin = async () => {
         try {
-            const response = await fetch("https://localhost:5000/login", {
+            const response = await fetch("http://localhost:5000/users/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: {
+                body: JSON.stringify({
                     username,
                     password
-                }
+                })
             });
 
             if (response.ok) {
                 // set JWT token
                 const data = await response.json();
-                localStorage.setItem(data.token);
+                localStorage.setItem('token', data.token);
                 // navigate to dashboard
                 navigate("/dashboard");
             }
@@ -35,17 +35,19 @@ export default function Login() {
 
     return (
         <div>
+            <h1> Custom URL Shortener </h1>
+            <p> Log in to your account</p>
             <input
                 type="text"
                 value={username}
-                onChange={(text) => setUsername(text)}
+                onChange={(e) => setUsername(e.target.value)}
                 placeholder="Username"
             />
 
             <input
                 type="text"
                 value={password}
-                onChange={(text) => setPassword(text)}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
             />
 
@@ -53,6 +55,7 @@ export default function Login() {
                 Login
             </button>
 
+            <p> New here? Create a new account to get started </p>
             <Link to="/register">
                 Register
             </Link>

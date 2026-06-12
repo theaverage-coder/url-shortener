@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "chart.js/auto";
 import { Line } from "react-chartjs-2";
 
 export default function Analytics() {
-    const { code } = useParams();
+    const { shortCode } = useParams();
     const [uniqueVisitors, setUniqueVisitors] = useState();
     const [totalClicks, setTotalClicks] = useState();
-    const [clickDates, setClickDates] = useState();
+    const [clickDates, setClickDates] = useState([]);
     const [error, setError] = useState("");
     const [dateCreated, setDateCreated] = useState();
     const [originalUrl, setOriginalUrl] = useState();
@@ -17,7 +18,9 @@ export default function Analytics() {
 
     const getAnalytics = async () => {
         try {
-            const response = await fetch(`https://localhost:5000/analytics/${code}`);
+            const response = await fetch(`http://localhost:5000/url/analytics/${shortCode}`, {
+                method: "GET"
+            });
 
             if (response.ok) {
                 const data = await response.json();
@@ -49,7 +52,7 @@ export default function Analytics() {
         ]
     };
 
-    const totalClicks = clickDates.reduce((sum, click) => sum + click.count, 0);
+    const totalClicksSinceCreationDate = clickDates.reduce((sum, click) => sum + click.count, 0);
 
     const daysSinceCreation = Math.max(
         1,
@@ -59,14 +62,14 @@ export default function Analytics() {
         )
     );
 
-    const averageClicksPerDay = (totalClicks / daysSinceCreation).toFixed(1);
+    const averageClicksPerDay = (totalClicksSinceCreationDate / daysSinceCreation).toFixed(1);
 
     return (
         <div>
             <h1> URL Analytics </h1>
             <div>
                 <h2> Custom URL </h2>
-                <p> {code} </p>
+                <p> {shortCode} </p>
             </div>
             <div>
                 <h2> Original URL </h2>

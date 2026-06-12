@@ -10,15 +10,15 @@ export default function Register() {
 
     const handleRegister = async () => {
         try {
-            const response = await fetch("https://localhost:5000/register", {
+            const response = await fetch("http://localhost:5000/users/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: {
+                body: JSON.stringify({
                     username,
                     password
-                }
+                })
             });
             if (response.ok) {
                 // Navigate to login page
@@ -36,14 +36,14 @@ export default function Register() {
             <input
                 type="text"
                 value={username}
-                onChange={(text) => setUsername(text)}
+                onChange={(e) => setUsername(e.target.value)}
                 placeholder="Username"
             />
 
             <input
                 type="text"
                 value={password}
-                onChange={(text) => setPassword(text)}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
             />
 

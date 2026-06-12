@@ -2,20 +2,22 @@
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Analytics from "./pages/Analytics";
-import ShortenLink from "./pages/ShortenLink";
-import Register from "./pages/Register";
+import Login from "./pages/Login.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Analytics from "./pages/Analytics.jsx";
+import ShortenLink from "./pages/ShortenLink.jsx";
+import Register from "./pages/Register.jsx";
 
 export default function App() {
-    return (
-        <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/analytics/:shortCode" element={<Analytics />} />
-            <Route path="/shorten" element={<ShortenLink />} />
-        </Routes>
-    )
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/analytics/:shortCode" element={<Analytics />} />
+        <Route path="/shorten" element={<ShortenLink />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }

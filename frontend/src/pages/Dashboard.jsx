@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom";
 import UrlCard from "../components/UrlCard";
 
@@ -7,19 +7,26 @@ export default function Dashboard() {
     const [error, setError] = useState("");
     const token = localStorage.getItem("token");
 
+    useEffect(() => {
+        if (token) {
+            getUrls();
+        }
+    }, [token]);
+
     // Get user links and display them
     const getUrls = async () => {
         try {
-            const response = await fetch("https://localhost:5000/my-urls", {
+
+            const response = await fetch("http://localhost:5000/url/my-urls", {
                 method: "GET",
-                header: {
-                    "Content-Type": "application/json",
+                headers: {
                     "Authorization": `Bearer ${token}`
                 }
-            })
+            });
+
             if (response.ok) {
-                const data = response.json();
-                setMyUrls(data.urls);
+                const data = await response.json();
+                setMyUrls(data);
             }
 
         } catch (err) {
@@ -35,12 +42,12 @@ export default function Dashboard() {
                 Create new custom URL
             </Link>
             <div> My URLs</div>
-            {urls.length === 0 ? (
+            {myUrls.length === 0 ? (
                 <div>
                     No URLs found
                 </div>
             ) : (
-                urls.map((u) => (
+                myUrls.map((u) => (
                     <UrlCard
                         key={u._id}
                         url={u}
