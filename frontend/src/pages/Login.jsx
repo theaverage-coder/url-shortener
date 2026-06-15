@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import styles from './Login.module.css';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -34,31 +35,34 @@ export default function Login() {
     }
 
     return (
-        <div>
+        <div className={styles.loginContainer}>
             <h1> Custom URL Shortener </h1>
             <p> Log in to your account</p>
-            <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
-            />
+            <div className={styles.inputContainer}>
+                <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Username"
+                />
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                />
+            </div>
 
-            <input
-                type="text"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-            />
+            <div className={styles.buttonsContainer}>
+                <button onClick={handleLogin} >
+                    Login
+                </button>
 
-            <button onClick={handleLogin} >
-                Login
-            </button>
-
-            <p> New here? Create a new account to get started </p>
-            <Link to="/register">
-                Register
-            </Link>
+                <p> New here? Create a new account to get started </p>
+                <Link className={`${styles.button} ${styles.registerButton}`} to="/register">
+                    Register
+                </Link>
+            </div>
         </div>
     )
 }
