@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from './Register.module.css';
 
 export default function Register() {
     const navigate = useNavigate();
@@ -32,22 +33,25 @@ export default function Register() {
         }
     }
     return (
-        <div>
-            <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
-            />
+        <div className={styles.registerContainer}>
+            <h1> Custom URL Shortener </h1>
+            <p> Create a new account</p>
+            <div className={styles.inputContainer}>
+                <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Username"
+                />
 
-            <input
-                type="text"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-            />
-
-            <button onClick={handleRegister}>
+                <input
+                    type="text"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                />
+            </div>
+            <button onClick={handleRegister} className={`${styles.button} ${styles.registerButton}`}>
                 Register
             </button>
         </div>
