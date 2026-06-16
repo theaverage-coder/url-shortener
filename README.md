@@ -1,6 +1,6 @@
 # URL Shortener
 
-A simple URL Shortener application that allows users to convert long URLs into short, shareable links. The application generates unique short codes and redirects users to the original URL when the shortened link is accessed.
+A simple URL Shortener application that allows users to convert long URLs into short, shareable links. The application generates unique short codes and redirects users to the original URL when the shortened link is accessed. Additionally, it tracks visitors for URLs and displays usage trends such as total clicks, unique visitors and trends over time.
 
 ## Features
 
@@ -43,7 +43,7 @@ Make sure you have installed:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/url-shortener.git
+git clone https://github.com/theaverage-coder/url-shortener.git
 cd url-shortener
 ```
 
@@ -52,20 +52,20 @@ cd url-shortener
 #### Backend
 
 ```bash
-cd server
+cd backend
 npm install
 ```
 
 #### Frontend
 
 ```bash
-cd client
+cd frontend
 npm install
 ```
 
 ### Environment Variables
 
-Create a `.env` file in the server directory:
+Create a `.env` file in the backend directory:
 
 ```env
 PORT=5000
@@ -78,27 +78,27 @@ BASE_URL=http://localhost:5000
 #### Start Backend
 
 ```bash
-cd server
-npm start
+cd backend
+npm run dev
 ```
 
 #### Start Frontend
 
 ```bash
-cd client
-npm start
+cd frontend
+npm run dev
 ```
 
 The application will be available at:
 
-* Frontend: `http://localhost:3000`
+* Frontend: `http://localhost:5173`
 * Backend: `http://localhost:5000`
 
 ## API Endpoints
 
 ### Create Custom URL
 
-**POST** `/api/shortenUrl`
+**POST** `/url/shortenUrl`
 
 Request Body:
 
@@ -119,17 +119,17 @@ Response:
 
 ### Redirect to Original URL
 
-**GET** `/get/:shortCode`
+**GET** `/url/display/:code`
 
 Redirects the user to the original URL associated with the provided short code.
 
 ### Get Analytics
-**GET** `/analytics/:code`
+**GET** `/url/analytics/:code`
 
 Retrieves information about total clicks, clicks per day and unique visitors given a URL code
 
 ### Login User
-**POST**  `/login`
+**POST**  `/users/login`
 Logins an existing user and returns a JWT token to be stored in the frontend for protected API calls
 
 ## Project Structure
@@ -138,10 +138,13 @@ Logins an existing user and returns a JWT token to be stored in the frontend for
 url-shortener/
 │
 ├── frontend/
-│   ├── components/
-│   |── pages/
-│   |── App.jsx
-|   └── main.jsx
+|   ├── src/
+|   │   ├── components/
+│   │   |── pages/
+│   │   |── App.jsx
+│   |   └── main.jsx
+|   |── index.html
+|   └── package.json
 |
 │
 ├── backend/
@@ -149,10 +152,11 @@ url-shortener/
 │   ├── models/
 │   ├── routes/
 │   ├── middleware/
-│   └── server.js
+│   ├── server.js
+|   ├── .env
+|   └── package.json
 │
 ├── .env
-├── package.json
 └── README.md
 ```
 
