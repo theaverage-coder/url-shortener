@@ -1,4 +1,4 @@
-import { jwt } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 export const authMiddleware = (req, res, next) => {
     try {
@@ -6,15 +6,16 @@ export const authMiddleware = (req, res, next) => {
 
         if (!header) {
             return res.status(401).json({ error: "No token " });
-
-            const token = header.split(" ")[1];
-
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-            req.user = decoded;
-            next();
-
         }
+
+        const token = header.split(" ")[1];
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        req.user = decoded.id;
+        next();
+
+
     } catch (err) {
         return res.status(401).json({ error: "Invalid token" });
     }

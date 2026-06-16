@@ -1,10 +1,10 @@
 import { nanoid } from "nanoid";
-import Url from "../models/Url";
-import Click from "../models/Click";
+import Url from "../models/Url.js";
+import Click from "../models/Click.js";
 import express from "express";
 
 // @desc Creates a short code for URL or a custom unique URL if given
-// @router /shortenUrl
+// @router /url/shortenUrl
 const shorten = async (req, res) => {
     try {
         const { originalUrl, customUrl } = req.body;
@@ -24,7 +24,7 @@ const shorten = async (req, res) => {
                 });
             }
             // Check if it's already been taken
-            const existingUrl = await Url.findOne({ code: customCode });
+            const existingUrl = await Url.findOne({ code: customUrl });
 
             if (existingUrl) {
                 return res.status(400).json({ error: "Custom URL already in use" });
@@ -52,10 +52,10 @@ const shorten = async (req, res) => {
 const isValidCode = /^[a-zA-Z0-9_-]{3,20}$/;
 
 // @desc Redirect to URL given a code
-// @router /get/:code
+// @router /url/get/:code
 const displayCode = async (req, res) => {
     try {
-        const url = await Url.findOne({ shortCode: req.params.code });
+        const url = await Url.findOne({ code: req.params.code });
 
         if (!url) return res.status(404).send("Not found");
 
@@ -78,11 +78,10 @@ const displayCode = async (req, res) => {
 }
 
 // @desc Get analytics for a given URL
-// @router /analytics/:code
+// @router /url/analytics/:shortCode
 const analytics = async (req, res) => {
-
     try {
-        const url = await Url.findOne({ shortCode: req.params.code });
+        const url = await Url.findOne({ code: req.params.shortCode });
 
         if (!url) return res.status(404).send("Not found");
 
@@ -137,8 +136,8 @@ const analytics = async (req, res) => {
 }
 
 // @desc Get all URL codes created by a user
-// @router /my-urls
-const my_urls = async (req, res) => {
+// @router /url/my-urls
+const myUrls = async (req, res) => {
     try {
         const urls = await Url.find({ user: req.user });
 
@@ -153,5 +152,5 @@ export {
     shorten,
     displayCode,
     analytics,
-    my_urls
+    myUrls
 }

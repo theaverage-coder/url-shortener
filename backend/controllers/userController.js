@@ -1,10 +1,10 @@
-import User from "../models/User";
+import User from "../models/User.js";
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 // @desc Registers a new user
-// @router /register
+// @router /users/register
 const register = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -34,7 +34,7 @@ const register = async (req, res) => {
 
 
 // @ desc Logs in an existing user
-// @router /login
+// @router /users/login
 const login = async (req, res) => {
     try {
         const { username, password } = req.body;

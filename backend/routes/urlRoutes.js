@@ -1,11 +1,11 @@
 import express from "express";
 const router = express.Router();
-import { shorten, displayCode, analytics, my_urls } from "../controllers/urlController";
-import { authMiddleware } from "../middleware/auth";
+import { shorten, displayCode, analytics, myUrls } from "../controllers/urlController.js";
+import { authMiddleware } from "../middleware/auth.js";
 
 router.post("/shortenUrl", authMiddleware, shorten);
-router.get("/:code", displayCode);
-router.get("/analytics/:code", analytics);
-router.get("/my-urls", authMiddleware, my_urls);
+router.get("/analytics/:shortCode", analytics);
+router.get("/my-urls", authMiddleware, myUrls);
+router.get("/display/:code", displayCode);
 
 export default router;
