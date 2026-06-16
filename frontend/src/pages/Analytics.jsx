@@ -89,7 +89,7 @@ export default function Analytics() {
                 <h2> Traffic Over Time</h2>
                 <Line data={lineChartData} />
             </div>
-            <p> Average daily clicks: </p>
+            <p> Average daily clicks: {averageClicksPerDay}</p>
             <p> Peak traffic day: </p>
         </div>
     )

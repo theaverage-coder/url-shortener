@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { v4 as uuidv4 } from "uuid";
 import Url from "../models/Url.js";
 import Click from "../models/Click.js";
 import express from "express";
@@ -51,31 +52,6 @@ const shorten = async (req, res) => {
 // Regex expression that checks if a string is 3-20 characters and contains only alphanumerics, _ and - 
 const isValidCode = /^[a-zA-Z0-9_-]{3,20}$/;
 
-// @desc Redirect to URL given a code
-// @router /url/get/:code
-const displayCode = async (req, res) => {
-    try {
-        const url = await Url.findOne({ code: req.params.code });
-
-        if (!url) return res.status(404).send("Not found");
-
-        // Increment clicks
-        const updated = await Url.findByIdAndUpdate(url._id,
-            { $inc: { clicks: 1 } }
-        );
-
-        // Create click instance
-        const click = await Click.create({
-            urlId: url._id,
-        })
-
-        // Redirect to original URL
-        return res.redirect(url.originalUrl);
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ err: "Server error" });
-    }
-}
 
 // @desc Get analytics for a given URL
 // @router /url/analytics/:shortCode
@@ -122,12 +98,13 @@ const analytics = async (req, res) => {
             }
         ])
 
+
         return res.status(200).json({
             dateCreated: url.dateCreated,
             originalUrl: url.originalUrl,
             totalClicks: url.clicks,
             analytics: clicks,
-            uniqueVisitors
+            uniqueVisitors: uniqueVisitors[0].count
         })
     } catch (err) {
         console.error(err);
@@ -150,7 +127,6 @@ const myUrls = async (req, res) => {
 
 export {
     shorten,
-    displayCode,
     analytics,
     myUrls
 }
