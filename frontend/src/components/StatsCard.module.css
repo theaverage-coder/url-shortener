@@ -1,0 +1,30 @@
+.cardContainer {
+    display: flex;
+    background-color: #2D232E;
+    width: 300px;
+    height: 120px;
+    border-radius: 10px;
+    padding: 5px 15px;
+}
+
+h4 {
+    color: #F1F0EA;
+    margin-top: 5px;
+}
+
+.left {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.statsIcon {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+
+}

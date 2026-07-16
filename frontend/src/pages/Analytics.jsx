@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
+import styles from "./Analytics.module.css";
+import StatsCard from "../components/StatsCard";
 
 export default function Analytics() {
     const { shortCode } = useParams();
@@ -11,6 +13,8 @@ export default function Analytics() {
     const [error, setError] = useState("");
     const [dateCreated, setDateCreated] = useState();
     const [originalUrl, setOriginalUrl] = useState();
+    const [averageClicksPerDay, setAverageClicksPerDay] = useState(0);
+    const [peakTraffic, setPeakTraffic] = useState(null);
 
     useEffect(() => {
         getAnalytics();
@@ -40,7 +44,7 @@ export default function Analytics() {
 
     const lineChartData = {
         labels: clickDates.map(
-            click => `${click._id.month}/${click._id.day}`
+            click => `${click._id.day}/${click._id.month}`
         ),
         datasets: [
             {
@@ -52,45 +56,55 @@ export default function Analytics() {
         ]
     };
 
-    const totalClicksSinceCreationDate = clickDates.reduce((sum, click) => sum + click.count, 0);
 
-    const daysSinceCreation = Math.max(
-        1,
-        Math.ceil(
-            (Date.now() - dateCreated) /
-            (1000 * 60 * 60 * 24)
-        )
-    );
+    useEffect(() => {
+        if (!dateCreated || !totalClicks || !clickDates) return;
 
-    const averageClicksPerDay = (totalClicksSinceCreationDate / daysSinceCreation).toFixed(1);
+        const totalClicksSinceCreationDate = clickDates.reduce((sum, click) => sum + click.count, 0);
+
+        const daysSinceCreation = Math.max(
+            1,
+            Math.ceil(
+                (Date.now() - new Date(dateCreated).getTime()) /
+                (1000 * 60 * 60 * 24)
+            )
+        );
+
+        const avg = totalClicksSinceCreationDate / daysSinceCreation;
+
+        setAverageClicksPerDay(avg.toFixed(1));
+
+        // Get peak day
+        setPeakTraffic(clickDates.reduce((max, click) => click.count > max.count ? click : max));
+    }, [dateCreated, totalClicks, clickDates]);
 
     return (
         <div>
             <h1> URL Analytics </h1>
-            <div>
-                <h2> Custom URL </h2>
-                <p> {shortCode} </p>
+            <div className={styles.statsContainer}>
+                <div className={styles.urlContainer}>
+                    <div className={styles.url}>
+                        <h2> Custom URL </h2>
+                        <p> {shortCode} </p>
+                    </div>
+                    <div className={styles.url}>
+                        <h2> Original URL </h2>
+                        <p> {originalUrl} </p>
+                    </div>
+                </div>
+                <div className={styles.cards}>
+                    <StatsCard title="Total clicks" stat={totalClicks} />
+                    <StatsCard title="Unique visitors" stat={uniqueVisitors} />
+                </div>
+                <div className={styles.cards}>
+                    <StatsCard title="Average clicks per day" stat={averageClicksPerDay} />
+                    <StatsCard title="Peak traffic day" stat={peakTraffic} />
+                </div>
             </div>
-            <div>
-                <h2> Original URL </h2>
-                <p> {originalUrl} </p>
-            </div>
-            <div>
-                <h3> Total clicks</h3>
-                <p> {totalClicks} </p>
-            </div>
-            <div>
-                <h3> Unique Visitors</h3>
-                <p> {uniqueVisitors}
-
-                </p>
-            </div>
-            <div>
+            <div className={styles.chartContainer}>
                 <h2> Traffic Over Time</h2>
                 <Line data={lineChartData} />
             </div>
-            <p> Average daily clicks: {averageClicksPerDay}</p>
-            <p> Peak traffic day: </p>
         </div>
     )
 }

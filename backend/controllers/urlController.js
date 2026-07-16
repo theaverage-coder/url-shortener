@@ -90,7 +90,7 @@ const analytics = async (req, res) => {
             },
             {
                 $group: {
-                    _id: "$user"
+                    _id: "$visitor"
                 }
             },
             {
