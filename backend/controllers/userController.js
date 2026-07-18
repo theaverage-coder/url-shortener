@@ -1,7 +1,7 @@
-import User from "../models/User.js";
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import prisma from "../lib/prisma";
 
 // @desc Registers a new user
 // @router /users/register
@@ -9,7 +9,11 @@ const register = async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        const existing = await User.findOne({ username });
+        const existing = await prisma.user.findUnique({
+            where: {
+                username,
+            },
+        });
 
         if (existing) {
             return res.status(400).json({ error: "Username is taken" });
@@ -17,10 +21,12 @@ const register = async (req, res) => {
 
         const cryptedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = await User.create({
-            username,
-            password: cryptedPassword
-        })
+        const newUser = await prisma.user.create({
+            data: {
+                username,
+                password: cryptedPassword,
+            },
+        });
 
         if (newUser) {
             return res.sendStatus(200);
@@ -39,11 +45,14 @@ const login = async (req, res) => {
     try {
         const { username, password } = req.body;
 
-
-        const user = await User.findOne({ username });
+        const user = await prisma.user.findUnique({
+            where: {
+                username,
+            },
+        });
 
         if (user && (await bcrypt.compare(password, user.password))) {
-            const token = generateToken(user._id);
+            const token = generateToken(user.id);
             return res.status(200).json({ token });
         }
 

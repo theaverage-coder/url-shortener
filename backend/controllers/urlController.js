@@ -1,7 +1,5 @@
 import { nanoid } from "nanoid";
 import { v4 as uuidv4 } from "uuid";
-import Url from "../models/Url.js";
-import Click from "../models/Click.js";
 import express from "express";
 import prisma from "../lib/prisma";
 

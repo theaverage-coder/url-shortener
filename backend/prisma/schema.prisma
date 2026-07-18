@@ -15,15 +15,16 @@ model Url {
   originalUrl String
   code        String    @unique
   dateCreated DateTime  @default(now())
-  clicks      Int       @default(0)
+  clickCount  Int       @default(0)
 
   userId Int
   user User @relation(fields: [userId], references: [id])
+  clicks Click[]
 }
 
 model User {
   id          Int       @id @default(autoincrement())
-  email       String    @unique
+  username    String    @unique
   password    String
 
   urls Url[]
