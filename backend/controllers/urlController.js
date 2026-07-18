@@ -94,7 +94,7 @@ const analytics = async (req, res) => {
         return res.status(200).json({
             dateCreated: url.dateCreated,
             originalUrl: url.originalUrl,
-            totalClicks: url.clicks,
+            totalClicks: url.clickCount,
             analytics: clicks,
             uniqueVisitors: uniqueVisitors[0].count
         })
@@ -115,6 +115,68 @@ const myUrls = async (req, res) => {
         })
         return res.status(200).json(urls);
     } catch (err) {
+        console.log(err);
+        return res.status(500).json({ err: "Server error" });
+    }
+}
+
+// @desc Display URL given a code
+// @router /:code
+const displayUrl = async (req, res) => {
+    try {
+
+        // Find URL
+        const url = await prisma.url.findUnique({
+            where: {
+                code: req.params.code,
+            },
+        });
+
+        if (!url) {
+            return res.status(404).send("Not found");
+        }
+
+        // Increment clicks
+        await prisma.url.update({
+            where: {
+                id: url.id
+            },
+            data: {
+                clickCount: {
+                    increment: 1
+                },
+            },
+        })
+
+        // Retrieve user cookie
+        let visitorId = req.cookies.visitorId;
+
+        // Create one if it doesn't exist
+        if (!visitorId) {
+            visitorId = uuid();
+
+            res.cookie(
+                "visitorId",
+                visitorId,
+                {
+                    maxAge: 1000 * 60 * 60 * 24 * 365,
+                    httpOnly: true
+                }
+            );
+        }
+
+        // Create click instance
+        await prisma.click.create({
+            data: {
+                urlId: url.id,
+                visitor: visitorId,
+            },
+        });
+
+        // Redirect to original URL
+        return res.redirect(url.originalUrl);
+    } catch (err) {
+        console.log(err);
         return res.status(500).json({ err: "Server error" });
     }
 }
@@ -123,5 +185,6 @@ const myUrls = async (req, res) => {
 export {
     shorten,
     analytics,
-    myUrls
+    myUrls,
+    displayUrl
 }
