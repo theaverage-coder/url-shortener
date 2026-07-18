@@ -20,6 +20,7 @@ model Url {
   userId Int
   user User @relation(fields: [userId], references: [id])
   clicks Click[]
+  @@index([userId])
 }
 
 model User {
@@ -37,4 +38,7 @@ model Click {
 
   urlId Int
   url Url @relation(fields: [urlId], references: [id])
+  @@index([urlId])
+  @@index([urlId, timestamp])
+  @@index([urlId, visitor])
 }
