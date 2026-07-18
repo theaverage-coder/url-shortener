@@ -11,9 +11,9 @@ datasource db {
 }
 
 model Url {
-  id      Int       @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   originalUrl String
-  code        String
+  code        String    @unique
   dateCreated DateTime  @default(now())
   clicks      Int       @default(0)
 
@@ -22,15 +22,18 @@ model Url {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  password  String
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  password    String
 
   urls Url[]
 }
 
 model Click {
-  id        Int     @id @default(autoincrement())
-  timestamp DateTime    @default(now())
-  visitor   String
+  id          Int       @id @default(autoincrement())
+  timestamp   DateTime  @default(now())
+  visitor     String
+
+  urlId Int
+  url Url @relation(fields: [urlId], references: [id])
 }
