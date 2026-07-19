@@ -29,7 +29,7 @@ const register = async (req, res) => {
         });
 
         if (newUser) {
-            return res.sendStatus(200);
+            return res.sendStatus(201);
         }
         return res.status(400).json({ error: "Failed to create new user" });
 

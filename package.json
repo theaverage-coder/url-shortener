@@ -10,5 +10,9 @@
     "client": "npm start --prefix frontend",
     "server": "npm start --prefix backend",
     "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2"
   }
 }
