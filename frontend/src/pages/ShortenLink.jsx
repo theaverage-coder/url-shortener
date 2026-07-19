@@ -22,6 +22,7 @@ export default function ShortenLink() {
 
             if (response.ok) {
                 console.log("Custom code created!");
+                // Display code returned from API
             } else {
                 const errorJson = await response.json();
                 console.log(errorJson.error);

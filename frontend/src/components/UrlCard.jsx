@@ -16,7 +16,7 @@ export default function UrlCard({ url }) {
                 <Link className={styles.btn} to={`/analytics/${url.code}`} >
                     View analytics
                 </Link>
-                <a className={styles.btn} href={`http://localhost:5000/url/display/${url.code}`}>
+                <a className={styles.btn} href={`http://localhost:5000/${url.code}`}>
                     Visit site
                 </a>
             </div>

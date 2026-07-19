@@ -21,6 +21,7 @@ export default function Dashboard() {
 
     // Get user links and display them
     const getUrls = async () => {
+        console.log("here");
         try {
 
             const response = await fetch("http://localhost:5000/url/my-urls", {
@@ -32,9 +33,11 @@ export default function Dashboard() {
 
             if (response.ok) {
                 const data = await response.json();
+                console.log(data);
                 setMyUrls(data);
+            } else {
+                console.log("Failed");
             }
-
         } catch (err) {
             console.log(err);
             setError("Failed to retrieve URLs");
@@ -103,7 +106,7 @@ export default function Dashboard() {
                 <div className={styles.cardsContainer}>
                     {myUrls.map((u) => (
                         <UrlCard
-                            key={u._id}
+                            key={u.id}
                             url={u}
                         />
 

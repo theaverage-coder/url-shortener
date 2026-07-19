@@ -44,7 +44,7 @@ export default function Analytics() {
 
     const lineChartData = {
         labels: clickDates.map(
-            click => `${click._id.day}/${click._id.month}`
+            click => `${click.day}/${click.month}`
         ),
         datasets: [
             {
@@ -74,8 +74,14 @@ export default function Analytics() {
 
         setAverageClicksPerDay(avg.toFixed(1));
 
-        // Get peak day
-        setPeakTraffic(clickDates.reduce((max, click) => click.count > max.count ? click : max));
+        const peak = clickDates.reduce(
+            (max, click) => click.count > max.count ? click : max
+        );
+
+        setPeakTraffic(
+            `${peak.year}-${String(peak.month).padStart(2, "0")}-${String(peak.day).padStart(2, "0")}`
+        );
+
     }, [dateCreated, totalClicks, clickDates]);
 
     return (
