@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import { v4 as uuidv4 } from "uuid";
 import express from "express";
-import prisma from "../lib/prisma";
+import prisma from "../lib/prisma.js";
 
 // @desc Creates a short code for URL or a custom unique URL if given
 // @router /url/shortenUrl
@@ -39,7 +39,7 @@ const shorten = async (req, res) => {
             code = new nanoid(6); // Generate random code
         }
 
-        prisma.url.create({
+        await prisma.url.create({
             data: {
                 originalUrl,
                 code,
@@ -47,8 +47,8 @@ const shorten = async (req, res) => {
             }
         })
 
-        return res.status(200).json({
-            shortUrl: `http://localhost:5000/${code}`
+        return res.status(201).json({
+            code
         });
 
     } catch (err) {
@@ -80,7 +80,7 @@ const analytics = async (req, res) => {
         EXTRACT (DAY FROM timestamp) AS day,
         COUNT(*)::int AS count
         FROM "Click"
-        WHERE "UrlId" = ${url.id}
+        WHERE "urlId" = ${url.id}
         GROUP BY year, month, day
         ORDER BY year, month, day
         `;
@@ -90,7 +90,10 @@ const analytics = async (req, res) => {
         FROM "Click"
         WHERE "urlId" = ${url.id}
         `
-
+        console.log(url.originalUrl);
+        console.log(clicks)
+        console.log(url.clickCount);
+        console.log(uniqueVisitors[0].count)
         return res.status(200).json({
             dateCreated: url.dateCreated,
             originalUrl: url.originalUrl,
@@ -120,71 +123,11 @@ const myUrls = async (req, res) => {
     }
 }
 
-// @desc Display URL given a code
-// @router /:code
-const displayUrl = async (req, res) => {
-    try {
 
-        // Find URL
-        const url = await prisma.url.findUnique({
-            where: {
-                code: req.params.code,
-            },
-        });
-
-        if (!url) {
-            return res.status(404).send("Not found");
-        }
-
-        // Increment clicks
-        await prisma.url.update({
-            where: {
-                id: url.id
-            },
-            data: {
-                clickCount: {
-                    increment: 1
-                },
-            },
-        })
-
-        // Retrieve user cookie
-        let visitorId = req.cookies.visitorId;
-
-        // Create one if it doesn't exist
-        if (!visitorId) {
-            visitorId = uuid();
-
-            res.cookie(
-                "visitorId",
-                visitorId,
-                {
-                    maxAge: 1000 * 60 * 60 * 24 * 365,
-                    httpOnly: true
-                }
-            );
-        }
-
-        // Create click instance
-        await prisma.click.create({
-            data: {
-                urlId: url.id,
-                visitor: visitorId,
-            },
-        });
-
-        // Redirect to original URL
-        return res.redirect(url.originalUrl);
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({ err: "Server error" });
-    }
-}
 
 
 export {
     shorten,
     analytics,
     myUrls,
-    displayUrl
 }

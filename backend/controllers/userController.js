@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import prisma from "../lib/prisma";
+import prisma from "../lib/prisma.js";
 
 // @desc Registers a new user
 // @router /users/register
@@ -56,7 +56,7 @@ const login = async (req, res) => {
             return res.status(200).json({ token });
         }
 
-        return res.status(400).json({ error: "Invalid credentials " });
+        return res.status(401).json({ error: "Invalid credentials " });
     } catch (err) {
         return res.status(500).json({ error: "Server error" });
     }

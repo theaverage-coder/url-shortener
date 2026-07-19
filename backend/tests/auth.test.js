@@ -5,7 +5,9 @@ import bcrypt from "bcrypt";
 
 describe("Auth", () => {
     beforeEach(async () => {
+        //Reset test database
         await prisma.user.deleteMany();
+
         const hashedPassword = await bcrypt.hash("password123", 10);
 
         await prisma.user.create({
@@ -41,7 +43,25 @@ describe("Auth", () => {
     });
 
     it("should reject an invalid password", async () => {
+        const res = await request(app)
+            .post("/users/login")
+            .send({
+                username: "test123",
+                password: "wrongpassword"
+            });
 
+        expect(res.statusCode).toBe(401);
+    });
+
+    it("should reject a nonexistent user", async () => {
+        const res = await request(app)
+            .post("/users/login")
+            .send({
+                username: "johnsmith",
+                password: "helloworld"
+            });
+
+        expect(res.statusCode).toBe(401);
     })
 });
 
